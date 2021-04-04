@@ -32,8 +32,8 @@ jobs:
           files: '**/*.bicep'
 
       # Checks the result
-      #- name: Check the result
-      #  shell: bash
-      #  run: |
-      #    shopt -s globstar
-      #    ls -altR **/sample*.*
+      - name: Check the result
+        shell: bash
+        run: |
+          shopt -s globstar
+          ls -altR **/aks.*
