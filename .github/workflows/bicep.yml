@@ -36,4 +36,4 @@ jobs:
         shell: bash
         run: |
           shopt -s globstar
-          ls -altR **/aks.*
+          ls -altR deploy/bicep/*.json
