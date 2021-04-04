@@ -37,3 +37,16 @@ jobs:
         run: |
           shopt -s globstar
           ls -altR deploy/bicep/*.json
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy ARM template
+        uses: Azure/arm-deploy@v1
+        with:
+          scope: 'resourcegroup'
+          resourceGroupName: 'zapr-dev'
+          template: deploy/bicep/aks.json
+          deploymentMode: 'Complete'
