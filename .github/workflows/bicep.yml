@@ -50,3 +50,26 @@ jobs:
           resourceGroupName: 'zapr-dev'
           template: deploy/bicep/aks.json
           deploymentMode: 'Complete'
+      
+      - uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+        id: install
+
+      uses: azure/aks-set-context@v1
+        with:
+            creds: '${{ secrets.AZURE_CREDENTIALS }}'
+            resource-group: 'zapr-dev'
+            cluster-name: 'zapraks01'
+        id: login
+      
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1.1
+
+      - name: Run a multi-line script
+        run: |
+          helm repo add dapr https://daprio.azurecr.io/helm/v1/repo
+          helm repo update
+          kubectl create namespace dapr-system
+          helm install dapr dapr/dapr --namespace dapr-system
+          kubectl get pods -n dapr-system -w
