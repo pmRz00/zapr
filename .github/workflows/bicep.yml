@@ -66,10 +66,18 @@ jobs:
       - name: Helm tool installer
         uses: Azure/setup-helm@v1.1
 
-      - name: Run a multi-line script
+      - name: Install dapr
         run: |
           helm repo add dapr https://daprio.azurecr.io/helm/v1/repo
           helm repo update
           kubectl create namespace dapr-system
           helm install dapr dapr/dapr --namespace dapr-system
-          kubectl get pods -n dapr-system -w
+      
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
+      - name: Check dapr pods running
+        run:
+          kubectl get pods -n dapr-system
