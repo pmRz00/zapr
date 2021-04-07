@@ -73,7 +73,7 @@ jobs:
           echo "::set-output name=OUTPUT::$OUTPUT"
 
       - name: Install dapr
-        if: steps.daprcheck.outputs.OUTPUT == "No resources found in dapr-system namespace."
+        if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
         run: |
           helm repo add dapr https://daprio.azurecr.io/helm/v1/repo
           helm repo update
@@ -81,12 +81,12 @@ jobs:
           helm install dapr dapr/dapr --namespace dapr-system
       
       - name: Sleep for 30 seconds
-        if: steps.daprcheck.outputs.OUTPUT == "No resources found in dapr-system namespace."
+        if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
         uses: jakejarvis/wait-action@master
         with:
           time: '30s'
 
       - name: Check dapr pods running
-        if: steps.daprcheck.outputs.OUTPUT == "No resources found in dapr-system namespace."
+        if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
         run:
           kubectl get pods -n dapr-system
