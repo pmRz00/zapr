@@ -66,11 +66,6 @@ jobs:
       - name: Helm tool installer
         uses: Azure/setup-helm@v1.1
 
-      - name: Check dapr pods running
-        run:
-          kubectl get pods -n dapr-system
-
-
       - name: Check dapr pods running 
         id: daprcheck
         run: |
