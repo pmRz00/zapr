@@ -73,7 +73,6 @@ jobs:
           echo "::set-output name=OUTPUT::$OUTPUT"
       
       - name: Check output
-        if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
         run:
           echo ${{steps.daprcheck.outputs.OUTPUT}}
           
