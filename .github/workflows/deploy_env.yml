@@ -71,10 +71,12 @@ jobs:
         run: |
           OUTPUT=$(kubectl get pods -n dapr-system) &&
           echo "::set-output name=OUTPUT::$OUTPUT"
+          echo "action_state=yellow" >> $GITHUB_ENV
       
       - name: Check output
-        run:
-          echo ${{steps.daprcheck.outputs.OUTPUT}}
+        run: |
+          echo "${{ env.action_state }}"
+          echo "${{ steps.daprcheck.outputs.OUTPUT }}"
           
       - name: Install dapr
         if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
