@@ -16,6 +16,35 @@ param agentCount int = 1
 @description('The size of the Virtual Machine.')
 param agentVMSize string = 'Standard_D2_v3'
 
+@minLength(5)
+@maxLength(50)
+@description('Specifies the name of the azure container registry.')
+param acrName string = 'acr001${uniqueString(resourceGroup().id)}' // must be globally unique
+
+@description('Enable admin user that have push / pull permission to the registry.')
+param acrAdminUserEnabled bool = false
+
+@allowed([
+  'Basic'
+  'Standard'
+  'Premium'
+])
+@description('Tier of your Azure Container Registry.')
+param acrSku string = 'Basic'
+
+// azure container registry
+resource acr 'Microsoft.ContainerRegistry/registries@2019-12-01-preview' = {
+  name: acrName
+  location: location
+  sku: {
+    name: acrSku
+  }
+  properties: {
+    adminUserEnabled: acrAdminUserEnabled
+  }
+}
+
+
 // vars
 var kubernetesVersion = '1.19.7'
 var subnetRef = '${vn.id}/subnets/${subnetName}'
@@ -89,3 +118,4 @@ resource aks 'Microsoft.ContainerService/managedClusters@2020-09-01' = {
 
 output id string = aks.id
 output apiServerAddress string = aks.properties.fqdn
+output acrLoginServer string = acr.properties.loginServer
