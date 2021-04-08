@@ -71,7 +71,12 @@ jobs:
         run: |
           OUTPUT=$(kubectl get pods -n dapr-system) &&
           echo "::set-output name=OUTPUT::$OUTPUT"
-
+      
+      - name: Check output
+        if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
+        run:
+          echo ${{steps.daprcheck.outputs.OUTPUT}}
+          
       - name: Install dapr
         if: steps.daprcheck.outputs.OUTPUT == 'No resources found in dapr-system namespace.'
         run: |
