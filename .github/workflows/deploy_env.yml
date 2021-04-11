@@ -69,10 +69,10 @@ jobs:
       - name: Check dapr pods running 
         id: daprcheck
         run: 
-          echo "dapr_pods_output=$(kubectl get pods -n dapr-system)" >> $GITHUB_ENV
+          echo "dapr_operator_pod_name=$(kubectl get pods -n dapr-system | grep dapr-operator | head -n1 | cut -d " " -f1)" >> $GITHUB_ENV
           
       - name: Install dapr
-        if: ${{ env.dapr_pods_output }} == 'No resources found in dapr-system namespace.'
+        if: ${{ env.dapr_operator_pod_name }} == 0
         run: |
           helm repo add dapr https://daprio.azurecr.io/helm/v1/repo
           helm repo update
@@ -80,12 +80,12 @@ jobs:
           helm install dapr dapr/dapr --namespace dapr-system
       
       - name: Sleep for 30 seconds
-        if: ${{ env.dapr_pods_output }} == 'No resources found in dapr-system namespace.'
+        if: ${{ env.dapr_operator_pod_name }} == 0
         uses: jakejarvis/wait-action@master
         with:
           time: '30s'
 
       - name: Check dapr pods running
-        if: ${{ env.dapr_pods_output }} == 'No resources found in dapr-system namespace.'
+        if: ${{ env.dapr_operator_pod_name }} == 0
         run:
           kubectl get pods -n dapr-system
